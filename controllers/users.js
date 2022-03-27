@@ -1,11 +1,11 @@
 const { User } = require('../db');
-
 const bcrypt = require('bcryptjs');
 const { generateToken } = require('../utils/auth')
+const { sendNotification } = require('../utils/notifications')
 
 const register = async (req, res) => {
 
-    const { username, password } = req.body;
+    const { username, password, email } = req.body;
 
     try {
 
@@ -28,7 +28,8 @@ const register = async (req, res) => {
 
         user = await User.create({
             username: username,
-            password: encriptedPassword
+            password: encriptedPassword,
+            email: email
         }
         );
 
@@ -37,10 +38,14 @@ const register = async (req, res) => {
         // Generar JWT
         const token = await generateToken(newUser.id, newUser.username);
 
+        if(user) 
+            sendNotification(user.email)
+
         return res.status(200).send({
             success: true,
             message: 'Usuario creado con exito',
             id: newUser.id,
+            email: newUser.email,
             name: newUser.username,
             token
         })
