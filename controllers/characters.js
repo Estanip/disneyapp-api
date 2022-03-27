@@ -1,4 +1,4 @@
-const { Character, Movie  } = require('../db');
+const { Character, Movie } = require('../db');
 
 const createCharacter = async (req, res) => {
 
@@ -66,7 +66,12 @@ const getCharacters = async (req, res) => {
                     where: {
                         name: name
                     },
-                    include: Movie
+                    include: [
+                        {
+                            model: Movie,
+                            attributes: ['title', 'image', 'genreId']
+                        }
+                    ]
                 })
 
                 if (character) {
@@ -95,7 +100,12 @@ const getCharacters = async (req, res) => {
             if (age || weight) {
                 const characters = await Character.findAll({
                     where: query,
-                    include: Movie
+                    include: [
+                        {
+                            model: Movie,
+                            attributes: ['title', 'image', 'genreId']
+                        }
+                    ]
                 })
 
                 if (characters.length > 0) {
@@ -117,7 +127,12 @@ const getCharacters = async (req, res) => {
                     where: {
                         id: movieId
                     },
-                    include: Character
+                    include: [
+                        {
+                            model: Character,
+                            attributes: ['name', 'image']
+                        }
+                    ]
                 })
 
                 if (movie) {
@@ -172,7 +187,12 @@ const getCharacterDetails = async (req, res) => {
             where: {
                 id: id
             },
-            include: Movie
+            include: [
+                {
+                    model: Movie,
+                    attributes: ['title', 'image', 'genreId']
+                }
+            ]
         })
 
         if (character) {
@@ -262,6 +282,12 @@ const updateCharacter = async (req, res) => {
             where: {
                 id: id
             },
+            include: [
+                {
+                    model: Movie,
+                    attributes: ['title', 'image', 'genreId']
+                }
+            ],
             returning: true,
             raw: true
         })

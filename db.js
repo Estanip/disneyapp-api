@@ -41,8 +41,10 @@ sequelize.models = Object.fromEntries(capsEntries);
 const { Character, Movie, Genre } = sequelize.models;
 
 // Asociaciones
-Character.belongsToMany(Movie, { through: 'MoviesCharacters' })
-Movie.belongsToMany(Character, { through: 'MoviesCharacters' })
+Character.belongsToMany(Movie, { through: 'MoviesCharacters' });
+Movie.belongsToMany(Character, { through: 'MoviesCharacters' });
+Genre.hasMany(Movie);
+Movie.belongsTo(Genre);
 
 module.exports = {
     ...sequelize.models, // exporto los models

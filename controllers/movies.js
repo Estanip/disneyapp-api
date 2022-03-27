@@ -1,10 +1,10 @@
-const { Movie, Character, Genre } = require('../db');
+const { Movie, Character } = require('../db');
 
 const createMovie = async (req, res) => {
 
     try {
 
-        const { image, title, creationDate, rating, characters, genre } = req.body;
+        const { image, title, creationDate, rating, characters, genreId } = req.body;
 
         // Chequeo si existe la pelicula o serie
         let movie = await Movie.findOne({
@@ -19,7 +19,8 @@ const createMovie = async (req, res) => {
                 image,
                 title,
                 creation_date: creationDate,
-                rating
+                rating,
+                genreId
             });
 
             if (characters.length > 0)
@@ -94,7 +95,13 @@ const getMovies = async (req, res) => {
                         order: [
                             ['creation_date', 'ASC']
                         ],
-                        raw: true
+                        raw: true,
+                        include: [
+                            {
+                                model: Character,
+                                attributes: ['name', 'image']
+                            }
+                        ]
                     })
 
                     if (movies.length > 0) {
@@ -116,6 +123,12 @@ const getMovies = async (req, res) => {
                         order: [
                             ['creation_date', 'DESC']
                         ],
+                        include: [
+                            {
+                                model: Character,
+                                attributes: ['name', 'image']
+                            }
+                        ],
                         raw: true
                     })
 
@@ -134,23 +147,28 @@ const getMovies = async (req, res) => {
             }
 
             if (genreId) {
-                const movie = await Movie.findOne({
+                const movies = await Movie.findAll({
                     where: {
-                        id: movieId
+                        genreId: genreId
                     },
-                    include: Character
+                    include: [
+                        {
+                            model: Character,
+                            attributes: ['name', 'image']
+                        }
+                    ]
                 })
 
-                if (movie) {
+                if (movies.length > 0) {
                     return res.status(200).send({
                         success: true,
-                        characters: movie.characters
+                        movies: movies
                     })
                 }
 
                 return res.send({
                     success: false,
-                    message: "No existe la pelicula o serie buscada"
+                    message: "No existe la pelicula o series con ese genero"
                 })
             }
 
@@ -158,7 +176,13 @@ const getMovies = async (req, res) => {
 
             const movies = await Movie.findAll({
                 attributes: ['image', 'title', 'creation_date'],
-                raw: true
+                raw: true,
+                include: [
+                    {
+                        model: Character,
+                        attributes: ['name', 'image']
+                    }
+                ]
             })
 
             if (movies.length > 0) {
@@ -193,7 +217,12 @@ const getMovieDetails = async (req, res) => {
             where: {
                 id: id
             },
-            include: Character
+            include: [
+                {
+                    model: Character,
+                    attributes: ['name', 'image']
+                }
+            ]
         })
 
         if (movie) {
@@ -261,7 +290,7 @@ const deleteMovie = async (req, res) => {
 const updateMovie = async (req, res) => {
 
     const { id } = req.params;
-    const { characters, genre } = req.body;
+    const { characters } = req.body;
 
     try {
 
@@ -282,6 +311,12 @@ const updateMovie = async (req, res) => {
             where: {
                 id: id
             },
+            include: [
+                {
+                    model: Character,
+                    attributes: ['name', 'image']
+                }
+            ],
             returning: true,
             raw: true
         })
