@@ -86,6 +86,53 @@ const getMovies = async (req, res) => {
                 })
             }
 
+            if(order) {
+
+                if(order === 'ASC') {
+                    const movies = await Movie.findAll({
+                        attributes: ['image', 'title', 'creation_date'],
+                        order: [
+                            ['creation_date', 'ASC']
+                        ],
+                        raw: true
+                    })
+
+                    if (movies.length > 0) {
+                        return res.status(200).send({
+                            success: true,
+                            movies: movies
+                        })
+                    }
+
+                    return res.send({
+                        success: false,
+                        message: "No hay peliculas o series creadas"
+                    })
+                }
+
+                if(order === 'DESC') {
+                    const movies = await Movie.findAll({
+                        attributes: ['image', 'title', 'creation_date'],
+                        order: [
+                            ['creation_date', 'DESC']
+                        ],
+                        raw: true
+                    })
+
+                    if (movies.length > 0) {
+                        return res.status(200).send({
+                            success: true,
+                            movies: movies
+                        })
+                    }
+
+                    return res.send({
+                        success: false,
+                        message: "No hay peliculas o series creadas"
+                    })
+                }
+            }
+
             if (genreId) {
                 const movie = await Movie.findOne({
                     where: {
