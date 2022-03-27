@@ -38,13 +38,13 @@ let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].s
 sequelize.models = Object.fromEntries(capsEntries);
 
 // Hago el destructuring de cada propiedad de sequelize.models
-const { Character, Film, Gender } = sequelize.models;
+const { Character, Movie, Genre } = sequelize.models;
 
 // Asociaciones
-Character.belongsToMany(Film, { through: 'characters_films' })
-Film.belongsToMany(Character, { through: 'films_characters' })
-Gender.belongsTo(Film)
-Film.hasOne(Gender)
+Character.belongsToMany(Movie, { through: 'characters_movies' })
+Movie.belongsToMany(Character, { through: 'movies_characters' })
+Genre.belongsTo(Movie)
+Movie.hasOne(Genre)
 
 module.exports = {
     ...sequelize.models, // exporto los models

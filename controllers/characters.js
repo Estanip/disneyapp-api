@@ -1,11 +1,11 @@
 const { Character } = require('../db');
-const { Film } = require('../db');
+const { Movie } = require('../db');
 
 const createCharacter = async (req, res) => {
 
     try {
 
-        const { image, name, age, weight, history, films } = req.body;
+        const { image, name, age, weight, history, movies } = req.body;
 
         // Chequeo si existe el personaje
         const character = await Character.findOne({
@@ -24,10 +24,10 @@ const createCharacter = async (req, res) => {
                 history
             });
 
-            if (films.length > 0)
-                await newCharacter.addFilms(films)
-            if (films.length === 0 || !films) {
-                await newCharacter.addFilms([])
+            if (movies.length > 0)
+                await newCharacter.addMovies(movies)
+            if (movies.length === 0 || !movies) {
+                await newCharacter.addMovies([])
             }
 
             return res.status(200).send({
@@ -52,24 +52,107 @@ const createCharacter = async (req, res) => {
 
 const getCharacters = async (req, res) => {
 
+    const { name, weight, movieId, age } = req.query;
+
+    const isEmpty = Object.keys(req.query).length === 0;
+
     try {
 
-        const characters = await Character.findAll({
-            raw: true,
-            attributes: ['image', 'name']
-        })
+        if (isEmpty === false) {
 
-        if (characters.length > 0) {
-            return res.status(200).send({
-                success: true,
-                characters: characters
+            // Busco de acuerdo al filtro pasado
+
+            if (name) {
+                const character = await Character.findOne({
+                    where: {
+                        name: name
+                    },
+                    include: Movie
+                })
+
+                if (character) {
+                    return res.status(200).send({
+                        success: true,
+                        character: character
+                    })
+                }
+
+                return res.send({
+                    success: false,
+                    message: "No existe el personaje buscado"
+                })
+            }
+
+            let query = {}
+
+            if (age) {
+                query = { age: age }
+            }
+
+            if (weight) {
+                query = { weight: weight }
+            }
+
+            if (age || weight) {
+                const characters = await Character.findAll({
+                    where: query,
+                    include: Movie
+                })
+
+                if (characters.length > 0) {
+                    return res.status(200).send({
+                        success: true,
+                        characters: characters
+                    })
+                }
+
+                return res.send({
+                    success: false,
+                    message: "No existe el personaje buscado"
+                })
+            }
+
+            if (movieId) {
+                const movie = await Movie.findOne({
+                    where: {
+                        id: movieId
+                    },
+                    include: Character
+                })
+
+                if (movie) {
+                    return res.status(200).send({
+                        success: true,
+                        characters: movie.characters
+                    })
+                }
+
+                return res.send({
+                    success: false,
+                    message: "No existe el personaje buscado"
+                })
+            }
+
+        } else {
+
+            const characters = await Character.findAll({
+                raw: true,
+                attributes: ['image', 'name']
             })
-        }
 
-        return res.send({
-            success: false,
-            message: "No hay personajes creados"
-        })
+            if (characters.length > 0) {
+                return res.status(200).send({
+                    success: true,
+                    characters: characters
+                })
+            }
+
+            return res.send({
+                success: false,
+                message: "No hay personajes creados"
+            })
+
+        }
 
     } catch (err) {
         res.status(500).send({
@@ -79,64 +162,37 @@ const getCharacters = async (req, res) => {
     }
 };
 
-const getCharacterBy = async (req, res) => {
+const getCharacterDetails = async (req, res) => {
 
-    const { id, name } = req.query;
+    const { id } = req.params;
 
     try {
 
-        // Busco de acuerdo al filtro pasado
+        const character = await Character.findOne({
+            where: {
+                id: id
+            },
+            include: Movie
+        })
 
-        if (id) {
-            const character = await Character.findOne({
-                where: {
-                    id: id
-                },
-                include: Film
-            })
-
-            if (character) {
-                return res.status(200).send({
-                    success: true,
-                    character: character
-                })
-            }
-
-            return res.send({
-                success: false,
-                message: "No existe el personaje buscado"
+        if (character) {
+            return res.status(200).send({
+                success: true,
+                character: character
             })
         }
-        if (name) {
-            const character = await Character.findOne({
-                where: {
-                    name: name
-                },
-                include: Film
-            })
 
-            if (character) {
-                return res.status(200).send({
-                    success: true,
-                    character: character
-                })
-            }
-
-            return res.send({
-                success: false,
-                message: "No existe el personaje buscado"
-            })
-
-        }
+        return res.send({
+            success: false,
+            message: "No se ha encontrado el personaje buscado"
+        })
 
     } catch (err) {
-        return res.status(500).send({
-            success: false,
+        res.send({
+            message: "Error al listar detalles de personajes",
             error: err
         })
     }
-
-
 };
 
 const deleteCharacter = async (req, res) => {
@@ -184,7 +240,7 @@ const deleteCharacter = async (req, res) => {
 const updateCharacter = async (req, res) => {
 
     const { id } = req.params;
-    const { films } = req.body;
+    const { movies } = req.body;
 
     try {
 
@@ -210,10 +266,10 @@ const updateCharacter = async (req, res) => {
             raw: true
         })
 
-        if (films.length > 0) {
-            await character.addFilms(films)
+        if (movies.length > 0) {
+            await character.addMovies(movies)
         } else {
-            await character.addFilms([])
+            await character.addMovies([])
         }
 
         return res.status(200).send({
@@ -230,4 +286,4 @@ const updateCharacter = async (req, res) => {
     }
 };
 
-module.exports = { createCharacter, getCharacters, getCharacterBy, deleteCharacter, updateCharacter }
+module.exports = { createCharacter, getCharacters, deleteCharacter, updateCharacter, getCharacterDetails }

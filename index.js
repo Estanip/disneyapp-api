@@ -17,7 +17,7 @@ app.use(cors({ origin: "*" }));
 // ROUTES
 app.use('/auth', require('./routes/auth'));
 app.use('/characters', require('./routes/characters'));
-app.use('/films', require('./routes/films'));
-app.use('/genders', require('./routes/genders'));
+app.use('/movies', require('./routes/movies'));
+app.use('/genres', require('./routes/genres'));
 
 module.exports = app;

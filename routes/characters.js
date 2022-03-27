@@ -1,10 +1,10 @@
 const { Router } = require('express');
-const { createCharacter, getCharacters, getCharacterBy, deleteCharacter, updateCharacter } = require('../controllers/characters');
+const { createCharacter, getCharacters, deleteCharacter, updateCharacter, getCharacterDetails } = require('../controllers/characters');
 
 const router = Router();
 
 router.get('/', getCharacters);
-router.get('/getby', getCharacterBy);
+router.get('/details/:id', getCharacterDetails)
 router.post('/create', createCharacter);
 router.delete('/delete/:id', deleteCharacter);
 router.put('/update/:id', updateCharacter);
