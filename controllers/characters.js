@@ -1,5 +1,4 @@
-const { Character } = require('../db');
-const { Movie } = require('../db');
+const { Character, Movie  } = require('../db');
 
 const createCharacter = async (req, res) => {
 
@@ -113,6 +112,7 @@ const getCharacters = async (req, res) => {
             }
 
             if (movieId) {
+
                 const movie = await Movie.findOne({
                     where: {
                         id: movieId

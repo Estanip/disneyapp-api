@@ -1,5 +1,4 @@
-const { Movie } = require('../db');
-const { Character } = require('../db');
+const { Movie, Character, Genre } = require('../db');
 
 const createMovie = async (req, res) => {
 
@@ -29,12 +28,6 @@ const createMovie = async (req, res) => {
                 await newMovie.addCharacters([])
             }
 
-            if (genre.length > 0)
-                await newMovie.addGenres(genre)
-            if (!genre || genre.length === 0) {
-                await newMovie.addGenres("")
-            }
-
             return res.status(200).send({
                 success: true,
                 movie: newMovie
@@ -57,7 +50,7 @@ const createMovie = async (req, res) => {
 
 const getMovies = async (req, res) => {
 
-    const { title, genre } = req.query;
+    const { title, genreId, order } = req.query;
 
     const isEmpty = Object.keys(req.query).length === 0;
 
@@ -72,7 +65,12 @@ const getMovies = async (req, res) => {
                     where: {
                         title: title
                     },
-                    include: Character, Genre
+                    include: [
+                        {
+                            model: Character,
+                            attributes: ['name', 'image']
+                        }
+                    ]
                 })
 
                 if (movie) {
@@ -84,16 +82,16 @@ const getMovies = async (req, res) => {
 
                 return res.send({
                     success: false,
-                    message: "No existe el personaje buscado"
+                    message: "No existe la pelicula o serie buscada"
                 })
             }
 
-            if (movieId) {
+            if (genreId) {
                 const movie = await Movie.findOne({
                     where: {
                         id: movieId
                     },
-                    include: Character, Genre
+                    include: Character
                 })
 
                 if (movie) {
@@ -148,7 +146,7 @@ const getMovieDetails = async (req, res) => {
             where: {
                 id: id
             },
-            include: Character, Genre
+            include: Character
         })
 
         if (movie) {
@@ -246,13 +244,6 @@ const updateMovie = async (req, res) => {
         }
         if (!characters || characters.length === 0) {
             await movie.addCharacters([])
-        }
-
-        if (genre.length > 0) {
-            await movie.addGenres(genre)
-        }
-        if (!genre || genre.length === 0) {
-            await movie.addGenres("")
         }
 
         return res.status(200).send({
