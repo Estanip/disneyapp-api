@@ -1,4 +1,4 @@
-const { Genre } = require('../db');
+const { Genre, Movie } = require('../db');
 
 const createGenre = async (req, res) => {
 
@@ -44,7 +44,7 @@ const getGenres = async (req, res) => {
 
     try {
         const genres = await Genre.findAll({
-            raw: true
+            include: [ Movie ]
         })
 
         if (genres.length > 0) {
