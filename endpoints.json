@@ -1,0 +1,204 @@
+{
+	"info": {
+		"_postman_id": "2303d673-4743-4103-9e5b-a59ae4c132ef",
+		"name": "Disney",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"Carlos\",\r\n    \"password\": \"carlitos\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:3008/auth/register"
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"Carlos\",\r\n    \"password\": \"carlitos\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:3008/auth/login"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Character",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"image\": \"pluto-img\",\r\n    \"name\": \"Pluto\",\r\n    \"age\": 33,\r\n    \"weight\": 56,\r\n    \"history\": \"Pluto es un perro muy orejon\",\r\n    \"movies\": []\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:3008/characters/create"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Movie",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"image\": \"pluto-img\",\r\n    \"title\": \"Pluto Volvio\",\r\n    \"creationDate\": \"2021-11-17\",\r\n    \"rating\": 4,\r\n    \"characters\": [],\r\n    \"genre\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:3008/movies/create"
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Movies",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "localhost:3008/movies"
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Characters",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3008/characters?movieId=06322f1f-f16f-455f-893e-59475e662f2d",
+					"host": [
+						"localhost"
+					],
+					"port": "3008",
+					"path": [
+						"characters"
+					],
+					"query": [
+						{
+							"key": "movieId",
+							"value": "06322f1f-f16f-455f-893e-59475e662f2d"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Character",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": "localhost:3008/characters/delete/e0a1855a-998a-4f37-9de3-9f198866ea92"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Character",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"image\": \"213123123123123123123\",\r\n    \"name\": \"Donald\",\r\n    \"age\": 45,\r\n    \"weight\": 66,\r\n    \"history\": \"Pluto es un perrazo\",\r\n    \"movies\": [\"e087bd5b-2fb1-42b8-821d-d21eec621b88\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:3008/characters/update/adbd9f35-ef04-40f6-b572-c6f8164cff08"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Movie",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": "localhost:3008/movies/delete/68be0ce0-5cf5-4620-aca0-29654fc609d3"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Movie",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"image\": \"213123123123123123123\",\r\n    \"title\": \"Pluto Volvio Con Todo\",\r\n    \"creationDate\": \"2022-01-17\",\r\n    \"rating\": 4,\r\n    \"characters\": [\"aefc14a1-0440-4f6e-a484-a7a02f69d859\", \"18b73f2c-5bea-4fe0-b838-7a6182405a0f\"],\r\n    \"genre\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:3008/movies/update/35708404-56ce-4941-85b7-e6ba8a325229"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Character Details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "localhost:3008/characters/details/adbd9f35-ef04-40f6-b572-c6f8164cff08"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Movie Details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "localhost:3008/movies/details/e087bd5b-2fb1-42b8-821d-d21eec621b88"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Genre",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": "localhost:3008/genres/create"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Genres",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "localhost:3008/genres"
+			},
+			"response": []
+		}
+	]
+}
