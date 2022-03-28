@@ -4,7 +4,7 @@ const createCharacter = async (req, res) => {
 
     try {
 
-        const { image, name, age, weight, history, movies } = req.body;
+        const { name, movies } = req.body;
 
         // Chequeo si existe el personaje
         const character = await Character.findOne({
@@ -15,13 +15,7 @@ const createCharacter = async (req, res) => {
 
         if (!character) {
             // creo un personaje
-            const newCharacter = await Character.create({
-                image,
-                name,
-                age,
-                weight,
-                history
-            });
+            const newCharacter = await Character.create(req.body);
 
             if (movies.length > 0)
                 await newCharacter.addMovies(movies)
